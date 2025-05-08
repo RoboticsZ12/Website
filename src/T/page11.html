@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future Traditions</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #2e8b57;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        img {
+            width: 80%;
+            max-width: 600px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .tradition-list {
+            list-style-type: decimal;
+            padding: 0;
+            text-align: left;
+            margin-bottom: 20px;
+            font-size: 18px;
+            max-width: 100%;
+        }
+
+        .tradition-list li {
+            margin: 10px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .clear-button {
+            background-color: #f44336;
+        }
+
+        .clear-button:hover {
+            background-color: #e53935;
+        }
+
+        .back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #008cba;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .back-button:hover {
+            background-color: #007bb5;
+        }
+
+        .delete-button {
+            padding: 5px 10px;
+            background-color: #ff6347;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .delete-button:hover {
+            background-color: #ff4500;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Future Traditions</h1>
+        <img src="Traditions.png" alt="Travel Image"> <!-- Replace with an actual image file -->
+
+        <div>
+            <h3>Your List of Future Traditions</h3>
+            <ul id="traditionList" class="tradition-list">
+                <!-- User traditions will appear here -->
+            </ul>
+        </div>
+
+        <input type="text" id="traditionInput" placeholder="Enter a new tradition">
+        <button onclick="addTradition()">Add Tradition</button>
+
+        <a href="Twebpage.html" class="back-button">Back to Main Page</a>
+    </div>
+
+    <script>
+        // Function to load traditions from localStorage and display them
+        function loadTraditions() {
+            const traditions = JSON.parse(localStorage.getItem("traditions")) || [];
+            const list = document.getElementById("traditionList");
+            list.innerHTML = ''; // Clear existing list
+
+            traditions.forEach(function(tradition, index) {
+                const li = document.createElement("li");
+                li.textContent = tradition;
+
+                // Create delete button for each tradition
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "Delete";
+                deleteButton.classList.add("delete-button");
+                deleteButton.onclick = function() {
+                    deleteTradition(index);
+                };
+
+                // Append delete button next to the tradition
+                li.appendChild(deleteButton);
+                list.appendChild(li);
+            });
+        }
+
+        // Function to add a new tradition
+        function addTradition() {
+            const input = document.getElementById("traditionInput");
+            const traditionText = input.value.trim();
+
+            if (traditionText) {
+                // Get the traditions from localStorage
+                const traditions = JSON.parse(localStorage.getItem("traditions")) || [];
+
+                // Add the new tradition
+                traditions.push(traditionText);
+
+                // Save it back to localStorage
+                localStorage.setItem("traditions", JSON.stringify(traditions));
+
+                // Clear input field and reload the list
+                input.value = '';
+                loadTraditions();
+            } else {
+                alert("Please enter a tradition before adding it.");
+            }
+        }
+
+        // Function to delete a specific tradition
+        function deleteTradition(index) {
+            const traditions = JSON.parse(localStorage.getItem("traditions")) || [];
+
+            // Remove the tradition from the array
+            traditions.splice(index, 1);
+
+            // Save the updated list back to localStorage
+            localStorage.setItem("traditions", JSON.stringify(traditions));
+
+            // Reload the list to reflect changes
+            loadTraditions();
+        }
+
+        // Load the traditions when the page is loaded
+        window.onload = function() {
+            loadTraditions();
+        }
+    </script>
+</body>
+</html>

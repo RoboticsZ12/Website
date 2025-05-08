@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scan to Visit Website</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+      background-color: #f0f0f0;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    #qrcode {
+      margin: 20px auto;
+      width: fit-content;
+    }
+  </style>
+</head>
+<body>
+  <h1>Scan to Visit the Website</h1>
+  <div id="qrcode"></div>
+  <a href="Twebpage.html">⬅️ Back to Main Page</a>
+
+  <!-- QR Code Generator Script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    new QRCode(document.getElementById("qrcode"), {
+      text: "http://127.0.0.1:5500/page12.html",  // <-- Replace this with your real URL
+      width: 200,
+      height: 200
+    });
+  </script>
+</body>
+</html>

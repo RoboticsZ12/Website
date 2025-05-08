@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5 Year Goals</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #2e8b57;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        img {
+            width: 80%;
+            max-width: 600px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .goals-list {
+            list-style-type: decimal;
+            padding: 0;
+            text-align: left;
+            margin-bottom: 20px;
+            font-size: 18px;
+            width: 100%;
+        }
+
+        .goals-list li {
+            margin: 10px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .goal-input {
+            width: 70%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .clear-button {
+            background-color: #f44336;
+        }
+
+        .clear-button:hover {
+            background-color: #e53935;
+        }
+
+        .back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #008cba;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .back-button:hover {
+            background-color: #007bb5;
+        }
+
+        .checkbox-container {
+            display: flex;
+            justify-content: space-between;
+            width: 30%;
+        }
+
+        .checkbox-container input {
+            margin-right: 10px;
+        }
+
+        .delete-button {
+            background-color: #ff5722;
+            padding: 5px 10px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background-color: #e64a19;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>5 Year Goals</h1>
+        <img src="goals.png" alt="Your Image"> <!-- Replace with an actual image file -->
+
+        <div>
+            <h3>Your 5 Year Goals</h3>
+            <ul id="goalsList" class="goals-list">
+                <!-- User goals will appear here -->
+            </ul>
+        </div>
+
+        <input type="text" id="goalInput" class="goal-input" placeholder="Enter a new goal">
+        <button onclick="addGoal()">Add Goal</button>
+
+        <button class="clear-button" onclick="clearAllGoals()">Clear All Goals</button>
+
+        <a href="Twebpage.html" class="back-button">Back to Main Page</a>
+    </div>
+
+    <script>
+        // Load goals from localStorage and display them
+        function loadGoals() {
+            const goals = JSON.parse(localStorage.getItem("goals")) || [];
+            const list = document.getElementById("goalsList");
+            list.innerHTML = ''; // Clear existing list
+
+            goals.forEach(function(goal, index) {
+                const li = document.createElement("li");
+                li.innerHTML = `
+                    <span>${goal.text}</span>
+                    <div class="checkbox-container">
+                        <label>Done</label><input type="checkbox" ${goal.done ? 'checked' : ''} onclick="toggleDone(${index})">
+                    </div>
+                    <button onclick="deleteGoal(${index})" class="delete-button">Delete</button>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        // Function to add a new goal
+        function addGoal() {
+            const input = document.getElementById("goalInput");
+            const goalText = input.value.trim();
+
+            if (goalText) {
+                const goals = JSON.parse(localStorage.getItem("goals")) || [];
+                goals.push({ text: goalText, done: false });
+                localStorage.setItem("goals", JSON.stringify(goals));
+
+                input.value = ''; // Clear input field
+                loadGoals();
+            } else {
+                alert("Please enter a goal before adding it.");
+            }
+        }
+
+        // Function to toggle "done" status of a goal
+        function toggleDone(index) {
+            const goals = JSON.parse(localStorage.getItem("goals")) || [];
+            goals[index].done = !goals[index].done;
+            localStorage.setItem("goals", JSON.stringify(goals));
+            loadGoals();
+        }
+
+        // Function to delete a specific goal
+        function deleteGoal(index) {
+            const goals = JSON.parse(localStorage.getItem("goals")) || [];
+            goals.splice(index, 1); // Remove the goal at the given index
+            localStorage.setItem("goals", JSON.stringify(goals));
+            loadGoals();
+        }
+
+        // Function to clear all goals
+        function clearAllGoals() {
+            localStorage.removeItem("goals");
+            loadGoals();
+        }
+
+        // Load goals when the page is loaded
+        window.onload = function() {
+            loadGoals();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kids Names</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: url('names.png') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background 0.5s ease;
+        }
+
+        h1 {
+            font-size: 40px;
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.7);
+            margin-bottom: 30px;
+        }
+
+        img {
+            width: 80%;
+            max-width: 600px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.7);
+        }
+
+        input[type="text"] {
+            padding: 12px;
+            font-size: 18px;
+            width: 60%;
+            max-width: 400px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border: 2px solid #ccc;
+            outline: none;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            background-color: #ddd;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 18px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+            font-size: 20px;
+            width: 80%;
+            max-width: 500px;
+            text-align: left;
+        }
+
+        li {
+            margin: 12px 0;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            transition: background 0.3s ease;
+            cursor: pointer;
+        }
+
+        li:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        a {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #4e8cff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 2px solid #4e8cff;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #4e8cff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Kids Names</h1>
+    <!-- <img src="names.png" alt="Kids Names Image"> -->
+
+    <input type="text" id="newName" placeholder="Enter a kid's name">
+    <button onclick="addName()">Add Name</button>
+
+    <ul id="namesList">
+        <!-- List of names will appear here -->
+    </ul>
+
+    <a href="Twebpage.html">Back to Main Page</a>
+
+    <script>
+        const namesList = document.getElementById("namesList");
+        const newNameInput = document.getElementById("newName");
+
+        // Load saved names from localStorage
+        function loadNames() {
+            const savedNames = JSON.parse(localStorage.getItem("names")) || [];
+            savedNames.forEach(name => {
+                const li = createNameElement(name);
+                namesList.appendChild(li);
+            });
+        }
+
+        // Create name list item
+        function createNameElement(name) {
+            const li = document.createElement("li");
+            li.textContent = name;
+            li.onclick = () => removeName(name, li);
+            return li;
+        }
+
+        // Add name to the list and save to localStorage
+        function addName() {
+            const name = newNameInput.value.trim();
+            if (name) {
+                const li = createNameElement(name);
+                namesList.appendChild(li);
+
+                const savedNames = JSON.parse(localStorage.getItem("names")) || [];
+                savedNames.push(name);
+                localStorage.setItem("names", JSON.stringify(savedNames));
+
+                newNameInput.value = ""; // Reset input field
+            }
+        }
+
+        // Remove name from the list and update localStorage
+        function removeName(name, li) {
+            const savedNames = JSON.parse(localStorage.getItem("names")) || [];
+            const index = savedNames.indexOf(name);
+            if (index !== -1) {
+                savedNames.splice(index, 1);
+                localStorage.setItem("names", JSON.stringify(savedNames));
+                namesList.removeChild(li);
+            }
+        }
+
+        // Initialize the page by loading saved names
+        loadNames();
+    </script>
+
+</body>
+</html>

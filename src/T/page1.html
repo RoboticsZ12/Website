@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dream Travel</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background: url('travel.png') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 48px;
+            text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.8);
+            margin-bottom: 40px;
+            animation: fadeIn 2s ease-out;
+        }
+
+        input[type="text"], select {
+            padding: 12px;
+            font-size: 20px;
+            width: 70%;
+            max-width: 450px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border: 2px solid #ccc;
+            outline: none;
+            background-color: white; /* Solid background for visibility */
+            color: black; /* Ensure text is readable */
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, select:focus {
+            background-color: #ddd;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            font-size: 22px;
+            width: 80%;
+            max-width: 500px;
+            margin-top: 20px;
+        }
+
+        li {
+            margin: 12px 0;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        li:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .list-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 700px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .list-box {
+            width: 45%;
+            background-color: rgba(255, 255, 255, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 10px;
+        }
+
+        .list-box h2 {
+            margin-bottom: 20px;
+        }
+
+        a {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #4e8cff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 2px solid #4e8cff;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #4e8cff;
+            color: white;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Dream Travel Destinations</h1>
+
+    <!-- Input for travel destination -->
+    <input type="text" id="newPlace" placeholder="Enter a dream destination">
+
+    <!-- Dropdown for Priority Level -->
+    <select id="priorityLevel">
+        <option value="1">Priority 1</option>
+        <option value="2">Priority 2</option>
+        <option value="3">Priority 3</option>
+    </select>
+
+    <!-- Dropdown for In-State / Out-of-State -->
+    <select id="stateStatus">
+        <option value="inState">In State</option>
+        <option value="outState">Out of State</option>
+    </select>
+
+    <button onclick="addDestination()">Add Destination</button>
+
+    <div class="list-container">
+        <div class="list-box" id="priority1InState">
+            <h2>Priority 1 - In State</h2>
+            <ul id="priority1InStateList"></ul>
+        </div>
+
+        <div class="list-box" id="priority1OutState">
+            <h2>Priority 1 - Out of State</h2>
+            <ul id="priority1OutStateList"></ul>
+        </div>
+
+        <div class="list-box" id="priority2InState">
+            <h2>Priority 2 - In State</h2>
+            <ul id="priority2InStateList"></ul>
+        </div>
+
+        <div class="list-box" id="priority2OutState">
+            <h2>Priority 2 - Out of State</h2>
+            <ul id="priority2OutStateList"></ul>
+        </div>
+
+        <div class="list-box" id="priority3InState">
+            <h2>Priority 3 - In State</h2>
+            <ul id="priority3InStateList"></ul>
+        </div>
+
+        <div class="list-box" id="priority3OutState">
+            <h2>Priority 3 - Out of State</h2>
+            <ul id="priority3OutStateList"></ul>
+        </div>
+
+        <!-- Visited List -->
+        <div class="list-box" id="visitedList">
+            <h2>Visited</h2>
+            <ul id="visitedPlacesList"></ul>
+        </div>
+    </div>
+
+    <a href="Twebpage.html">Back to Main Page</a>
+
+    <script>
+        // Function to add new destination to appropriate list
+        function addDestination() {
+            const destination = document.getElementById("newPlace").value.trim();
+            const priority = document.getElementById("priorityLevel").value;
+            const stateStatus = document.getElementById("stateStatus").value;
+
+            if (destination) {
+                // Create the list item
+                const li = document.createElement("li");
+                li.textContent = destination;
+                li.onclick = confirmAction; // Add click handler
+
+                // Determine which list to add the item to
+                let listId = `priority${priority}${stateStatus === 'inState' ? 'InState' : 'OutState'}List`;
+                document.getElementById(listId).appendChild(li);
+
+                // Save the list to localStorage
+                saveList();
+            }
+
+            document.getElementById("newPlace").value = ""; // Reset input field
+        }
+
+        // Function to confirm action on click (move to visited or delete)
+        function confirmAction(event) {
+            const action = confirm("Do you want to move this destination to the Visited list? Click Cancel to delete it.");
+
+            if (action) {
+                // Move the item to the Visited list
+                moveToVisited(event);
+            } else {
+                // Delete the item
+                event.target.parentNode.removeChild(event.target);
+                saveList(); // Save the updated list
+            }
+        }
+
+        // Function to move item to the visited list
+        function moveToVisited(event) {
+            const visitedList = document.getElementById("visitedPlacesList");
+            const li = event.target;
+
+            // Remove the clicked item from its current list
+            li.parentNode.removeChild(li);
+
+            // Add the item to the Visited list
+            visitedList.appendChild(li);
+
+            // Save the list to localStorage
+            saveList();
+        }
+
+        // Function to save lists to localStorage
+        function saveList() {
+            const lists = {
+                priority1InState: getListItems('priority1InStateList'),
+                priority1OutState: getListItems('priority1OutStateList'),
+                priority2InState: getListItems('priority2InStateList'),
+                priority2OutState: getListItems('priority2OutStateList'),
+                priority3InState: getListItems('priority3InStateList'),
+                priority3OutState: getListItems('priority3OutStateList'),
+                visited: getListItems('visitedPlacesList'),
+            };
+            localStorage.setItem('travelDestinations', JSON.stringify(lists));
+        }
+
+        // Function to get items from a list
+        function getListItems(listId) {
+            const listItems = [];
+            const list = document.getElementById(listId).getElementsByTagName("li");
+            for (let item of list) {
+                listItems.push(item.textContent);
+            }
+            return listItems;
+        }
+
+        // Function to load saved lists from localStorage
+        function loadSavedLists() {
+            const savedLists = JSON.parse(localStorage.getItem('travelDestinations')) || {};
+            for (let listId in savedLists) {
+                const list = savedLists[listId];
+                list.forEach(item => {
+                    const li = document.createElement("li");
+                    li.textContent = item;
+                    li.onclick = confirmAction;
+
+                    const listContainer = document.getElementById(listId);
+                    listContainer.appendChild(li);
+                });
+            }
+        }
+
+        // Load saved lists when the page loads
+        window.onload = loadSavedLists;
+    </script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Guest List</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #e0eafc, #cfdef3);
+      padding: 30px;
+      margin: 0;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 40px;
+      margin-bottom: 20px;
+    }
+
+    img {
+      width: 80%;
+      max-width: 600px;
+      margin-bottom: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .guest-container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .guest-column {
+      width: 320px;
+      background-color: #fff;
+      border: 3px solid #4e8cff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s ease;
+      text-align: left;
+    }
+
+    .guest-column:hover {
+      transform: translateY(-5px);
+    }
+
+    h2 {
+      border-bottom: 2px solid #4e8cff;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    h3 {
+      margin-top: 20px;
+      color: #333;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    li {
+      font-size: 18px;
+      margin: 8px 0;
+    }
+
+    input[type="number"] {
+      padding: 6px;
+      font-size: 16px;
+      width: 80px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 30px;
+      font-size: 18px;
+      color: #4e8cff;
+      text-decoration: none;
+      border: 2px solid #4e8cff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      background-color: #fff;
+      transition: background-color 0.3s ease;
+    }
+
+    a:hover {
+      background-color: #4e8cff;
+      color: white;
+    }
+
+    .total-box {
+      font-weight: bold;
+      color: #4e8cff;
+      font-size: 20px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎉 Guest List 🎉</h1>
+  <img src="guest.png" alt="Event Image" />
+
+  <div class="guest-container">
+    <!-- Z's List -->
+    <div class="guest-column">
+      <h2>Z's List</h2>
+
+      <h3>👨‍👩‍👧‍👦 Immediate Family</h3>
+      <ul>
+        <li><input type="number" min="0" value="0" class="z-input" /></li>
+      </ul>
+
+      <h3>🧑‍🤝‍🧑 Extended Family</h3>
+      <ul>
+        <li><input type="number" min="0" value="0" class="z-input" /></li>
+      </ul>
+
+      <h3>🎯 Friends</h3>
+      <ul>
+        <li><input type="number" min="0" value="0" class="z-input" /></li>
+      </ul>
+
+      <h3>🧾 TOTAL</h3>
+      <ul>
+        <li class="total-box" id="z-total">0</li>
+      </ul>
+    </div>
+
+    <!-- Taylor's List -->
+    <div class="guest-column">
+      <h2>Taylor's List</h2>
+
+      <h3>👨‍👩‍👧‍👦 Immediate Family</h3>
+      <ul>
+        <li><input type="number" min="0" value="0" class="t-input" /></li>
+      </ul>
+
+      <h3>🧑‍🤝‍🧑 Extended Family</h3>
+      <ul>
+        <li><input type="number" min="0" value="0" class="t-input" /></li>
+      </ul>
+
+      <h3>🎯 Friends</h3>
+      <ul>
+        <li><input type="number" min="0" value="0" class="t-input" /></li>
+      </ul>
+
+      <h3>🧾 TOTAL</h3>
+      <ul>
+        <li class="total-box" id="t-total">0</li>
+      </ul>
+    </div>
+  </div>
+
+  <a href="Twebpage.html">⬅️ Back to Main Page</a>
+
+  <script>
+    function updateTotal(className, totalId) {
+      const inputs = document.querySelectorAll(`.${className}`);
+      let sum = 0;
+
+      inputs.forEach((input, index) => {
+        const value = parseInt(input.value) || 0;
+        sum += value;
+
+        // Save individual input to localStorage
+        const key = `${className}-${index}`;
+        localStorage.setItem(key, value);
+      });
+
+      document.getElementById(totalId).textContent = sum;
+      // Save total to localStorage
+      localStorage.setItem(`${totalId}`, sum);
+    }
+
+    function restoreValues(className, totalId) {
+      const inputs = document.querySelectorAll(`.${className}`);
+      let sum = 0;
+
+      inputs.forEach((input, index) => {
+        const key = `${className}-${index}`;
+        const storedValue = localStorage.getItem(key);
+        if (storedValue !== null) {
+          input.value = storedValue;
+          sum += parseInt(storedValue) || 0;
+        }
+
+        // Attach event listener
+        input.addEventListener('input', () => updateTotal(className, totalId));
+      });
+
+      // Restore total
+      document.getElementById(totalId).textContent = sum;
+    }
+
+    // Restore data on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      restoreValues('z-input', 'z-total');
+      restoreValues('t-input', 't-total');
+    });
+  </script>
+</body>
+</html>

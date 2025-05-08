@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books of the Bible Checklist</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            background: url('cross.png') no-repeat center center fixed;
+            background-size: cover;
+            padding: 30px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 30px;
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.7);
+        }
+
+        .book {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+            margin: 5px 0;
+            font-size: 18px;
+        }
+
+        .book span {
+            flex: 1;
+            text-align: left;
+            color: #333;
+        }
+
+        input[type="checkbox"] {
+            transform: scale(1.5);
+            accent-color: #4caf50;
+        }
+
+        .progress-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 20px;
+            border-radius: 10px;
+            background-color: #ddd;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-fill {
+            background-color: #4caf50;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 30px;
+            font-size: 18px;
+            color: #4e8cff;
+            text-decoration: none;
+            border: 2px solid #4e8cff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background-color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #4e8cff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Books of the Bible Checklist</h1>
+
+    <div id="checklist"></div>
+
+    <div class="progress-container">
+        <div class="progress-label">📖 Progress</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%;"></div>
+        </div>
+    </div>
+
+    <a href="Twebpage.html">Back to Main Page</a>
+
+    <script>
+        const books = [
+            "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Joshua", "Judges", "Ruth", 
+            "1 Samuel", "2 Samuel", "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles", "Ezra", "Nehemiah", "Esther", 
+            "Job", "Psalms", "Proverbs", "Ecclesiastes", "Song of Solomon", "Isaiah", "Jeremiah", "Lamentations", 
+            "Ezekiel", "Daniel", "Hosea", "Joel", "Amos", "Obadiah", "Jonah", "Micah", "Nahum", "Habakkuk", "Zephaniah", 
+            "Haggai", "Zechariah", "Malachi", "Matthew", "Mark", "Luke", "John", "Acts", "Romans", "1 Corinthians", 
+            "2 Corinthians", "Galatians", "Ephesians", "Philippians", "Colossians", "1 Thessalonians", "2 Thessalonians", 
+            "1 Timothy", "2 Timothy", "Titus", "Philemon", "Hebrews", "James", "1 Peter", "2 Peter", "1 John", "2 John", 
+            "3 John", "Jude", "Revelation"
+        ];
+
+        const checklistContainer = document.getElementById("checklist");
+        const progressBar = document.getElementById("progressBar");
+        const totalBooks = books.length;
+
+        // Create checklist
+        books.forEach((book, index) => {
+            const bookDiv = document.createElement("div");
+            bookDiv.classList.add("book");
+
+            const bookName = document.createElement("span");
+            bookName.textContent = book;
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = JSON.parse(localStorage.getItem(book)) || false;
+            checkbox.addEventListener("change", () => {
+                localStorage.setItem(book, checkbox.checked);
+                updateProgress();
+            });
+
+            bookDiv.appendChild(bookName);
+            bookDiv.appendChild(checkbox);
+            checklistContainer.appendChild(bookDiv);
+        });
+
+        // Update progress bar based on checked books
+        function updateProgress() {
+            const checkedBooks = books.filter(book => JSON.parse(localStorage.getItem(book)));
+            const progress = (checkedBooks.length / totalBooks) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        // Initial progress update
+        updateProgress();
+    </script>
+</body>
+</html>

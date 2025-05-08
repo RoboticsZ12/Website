@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurants</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background: url('restaurant.png') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-size: 40px;
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.7);
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            padding: 12px;
+            font-size: 18px;
+            width: 60%;
+            max-width: 400px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border: 2px solid #ccc;
+            outline: none;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            background-color: #ddd;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 18px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+            font-size: 20px;
+            width: 80%;
+            max-width: 500px;
+            text-align: left;
+        }
+
+        li {
+            margin: 12px 0;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            transition: background 0.3s ease;
+            cursor: pointer;
+        }
+
+        li:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        a {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #4e8cff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 2px solid #4e8cff;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #4e8cff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Favorite Restaurants</h1>
+
+    <!-- Input to add new restaurant -->
+    <input type="text" id="newRestaurant" placeholder="Enter restaurant name">
+    <button onclick="addRestaurant()">Add Restaurant</button>
+
+    <ul id="restaurantsList">
+        <!-- Restaurant list will be dynamically populated here -->
+    </ul>
+
+    <a href="Twebpage.html">Back to Main Page</a>
+
+    <script>
+        const restaurantsList = document.getElementById("restaurantsList");
+        const newRestaurantInput = document.getElementById("newRestaurant");
+
+        // Load saved restaurants from localStorage
+        function loadRestaurants() {
+            const savedRestaurants = JSON.parse(localStorage.getItem("restaurants")) || [];
+            savedRestaurants.forEach(restaurant => {
+                const li = createRestaurantElement(restaurant);
+                restaurantsList.appendChild(li);
+            });
+        }
+
+        // Create restaurant list item
+        function createRestaurantElement(restaurant) {
+            const li = document.createElement("li");
+            li.textContent = restaurant;
+            li.onclick = () => removeRestaurant(restaurant, li);
+            return li;
+        }
+
+        // Add restaurant to the list and save to localStorage
+        function addRestaurant() {
+            const restaurant = newRestaurantInput.value.trim();
+            if (restaurant) {
+                const li = createRestaurantElement(restaurant);
+                restaurantsList.appendChild(li);
+
+                const savedRestaurants = JSON.parse(localStorage.getItem("restaurants")) || [];
+                savedRestaurants.push(restaurant);
+                localStorage.setItem("restaurants", JSON.stringify(savedRestaurants));
+
+                newRestaurantInput.value = ""; // Reset input field
+            }
+        }
+
+        // Remove restaurant from the list and update localStorage
+        function removeRestaurant(restaurant, li) {
+            const savedRestaurants = JSON.parse(localStorage.getItem("restaurants")) || [];
+            const index = savedRestaurants.indexOf(restaurant);
+            if (index !== -1) {
+                savedRestaurants.splice(index, 1);
+                localStorage.setItem("restaurants", JSON.stringify(savedRestaurants));
+                restaurantsList.removeChild(li);
+            }
+        }
+
+        // Initialize the page by loading saved restaurants
+        loadRestaurants();
+    </script>
+
+</body>
+</html>

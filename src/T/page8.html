@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wedding Checklist</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('figi.png') no-repeat center center fixed;
+      background-size: cover;
+      padding: 40px 20px;
+      color: #333;
+    }
+
+    h1 {
+      font-size: 42px;
+      color: #fff;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 5px #444;
+    }
+
+    .checklist {
+      max-width: 600px;
+      margin: auto;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .task {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #ccc;
+      font-size: 18px;
+    }
+
+    .task:last-child {
+      border-bottom: none;
+    }
+
+    .task span {
+      flex: 1;
+      text-align: left;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 16px;
+    }
+
+    input[type="checkbox"] {
+      transform: scale(1.4);
+      accent-color: #4e8cff;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 30px;
+      font-size: 18px;
+      color: #4e8cff;
+      text-decoration: none;
+      border: 2px solid #4e8cff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      background-color: #fff;
+      transition: background-color 0.3s ease;
+    }
+
+    a:hover {
+      background-color: #4e8cff;
+      color: white;
+    }
+
+    .progress-container {
+      max-width: 600px;
+      margin: 30px auto 0;
+    }
+
+    .progress-label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .progress-bar {
+      height: 20px;
+      border-radius: 10px;
+      background-color: #ddd;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+
+    .done-fill {
+      background-color: #4caf50;
+    }
+
+    .notdone-fill {
+      background-color: #f44336;
+    }
+
+    .countdown {
+      font-size: 30px;
+      font-weight: bold;
+      color: #ff5a5f;
+      margin-top: 30px;
+      text-shadow: 2px 2px 4px #333;
+    }
+
+    .add-button {
+      margin-top: 20px;
+      font-size: 24px;
+      background-color: #4e8cff;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+
+    .add-button:hover {
+      background-color: #3a6fcc;
+    }
+
+    .new-task-input {
+      margin-top: 10px;
+      width: 90%;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Wedding Checklist</h1>
+
+  <!-- Countdown Timer -->
+  <div class="countdown" id="countdown">
+    Loading countdown...
+  </div>
+
+  <div class="checklist" id="checklist">
+    <div class="task">
+      <span>Book the Venue</span>
+      <label><input type="checkbox" data-task="venue" data-status="done" /> Done</label>
+      <label><input type="checkbox" data-task="venue" data-status="notdone" /> Not Done</label>
+    </div>
+
+    <div class="task">
+      <span>Send Invitations</span>
+      <label><input type="checkbox" data-task="invites" data-status="done" /> Done</label>
+      <label><input type="checkbox" data-task="invites" data-status="notdone" /> Not Done</label>
+    </div>
+
+    <div class="task">
+      <span>Choose Wedding Dress</span>
+      <label><input type="checkbox" data-task="dress" data-status="done" /> Done</label>
+      <label><input type="checkbox" data-task="dress" data-status="notdone" /> Not Done</label>
+    </div>
+
+    <div class="task">
+      <span>Hire Photographer</span>
+      <label><input type="checkbox" data-task="photo" data-status="done" /> Done</label>
+      <label><input type="checkbox" data-task="photo" data-status="notdone" /> Not Done</label>
+    </div>
+
+    <div class="task">
+      <span>Plan Honeymoon</span>
+      <label><input type="checkbox" data-task="honeymoon" data-status="done" /> Done</label>
+      <label><input type="checkbox" data-task="honeymoon" data-status="notdone" /> Not Done</label>
+    </div>
+  </div>
+
+  <input type="text" id="newTaskInput" class="new-task-input" placeholder="Add new task...">
+  <button class="add-button" id="addTaskBtn">+</button>
+
+  <div class="progress-container">
+    <div class="progress-label">✅ Done Progress</div>
+    <div class="progress-bar">
+      <div class="progress-fill done-fill" id="doneProgress" style="width: 0%;"></div>
+    </div>
+
+    <div class="progress-label">❌ Not Done Progress</div>
+    <div class="progress-bar">
+      <div class="progress-fill notdone-fill" id="notDoneProgress" style="width: 0%;"></div>
+    </div>
+  </div>
+
+  <a href="Twebpage.html">⬅️ Back to Main Page</a>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const countdownDate = new Date("November 29, 2025 00:00:00").getTime();
+      const countdownElement = document.getElementById('countdown');
+
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = countdownDate - now;
+        if (distance <= 0) {
+          countdownElement.innerHTML = "The Big Day is here!";
+        } else {
+          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+      }
+
+      setInterval(updateCountdown, 1000);
+      updateCountdown();
+
+      function updateProgressBars() {
+        const allTasks = document.querySelectorAll('.task');
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        let doneCount = 0, notDoneCount = 0;
+
+        checkboxes.forEach(cb => {
+          if (cb.checked) {
+            cb.dataset.status === "done" ? doneCount++ : notDoneCount++;
+          }
+        });
+
+        const totalTasks = allTasks.length;
+        document.getElementById("doneProgress").style.width = `${(doneCount / totalTasks) * 100}%`;
+        document.getElementById("notDoneProgress").style.width = `${(notDoneCount / totalTasks) * 100}%`;
+      }
+
+      function setupCheckboxEvents() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+          const task = checkbox.dataset.task;
+          const status = checkbox.dataset.status;
+          const key = `${task}-${status}`;
+
+          if (localStorage.getItem(key) === "true") {
+            checkbox.checked = true;
+          }
+
+          checkbox.addEventListener('change', () => {
+            localStorage.setItem(key, checkbox.checked);
+            const opposite = status === "done" ? "notdone" : "done";
+            const oppositeKey = `${task}-${opposite}`;
+            const otherBox = document.querySelector(`input[data-task="${task}"][data-status="${opposite}"]`);
+
+            if (checkbox.checked && otherBox) {
+              otherBox.checked = false;
+              localStorage.setItem(oppositeKey, false);
+            }
+
+            updateProgressBars();
+          });
+        });
+      }
+
+      setupCheckboxEvents();
+      updateProgressBars();
+
+      // Add New Task
+      document.getElementById('addTaskBtn').addEventListener('click', () => {
+        const taskName = document.getElementById('newTaskInput').value.trim();
+        if (!taskName) return;
+
+        const taskId = taskName.toLowerCase().replace(/\s+/g, '-');
+        const checklist = document.getElementById('checklist');
+        const taskDiv = document.createElement('div');
+        taskDiv.classList.add('task');
+        taskDiv.innerHTML = `
+          <span>${taskName}</span>
+          <label><input type="checkbox" data-task="${taskId}" data-status="done" /> Done</label>
+          <label><input type="checkbox" data-task="${taskId}" data-status="notdone" /> Not Done</label>
+        `;
+        checklist.appendChild(taskDiv);
+        document.getElementById('newTaskInput').value = '';
+        setupCheckboxEvents();
+        updateProgressBars();
+      });
+    });
+  </script>
+</body>
+</html>

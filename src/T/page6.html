@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Travel Page</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('8071df8c-5bd8-4da3-abbf-5e037a4e4cbb.png') no-repeat center center fixed;
+      background-size: cover;
+      padding: 20px;
+      color: #ffffff;
+      text-shadow: 2px 2px 4px #000000;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    #countdown, #weekdayCountdown {
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #00ffcc;
+    }
+
+    a {
+      color: #ffcc00;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Belle Valley timeline</h1>
+  <div id="countdown"></div>
+  <div id="weekdayCountdown"></div>
+  
+  <a href="Twebpage.html">Back to Main Page</a>
+
+  <script>
+    function updateCountdowns() {
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      let targetDate = new Date(`${currentYear}-05-29T15:45:00`);
+
+      if (now > targetDate) {
+        targetDate = new Date(`${currentYear + 1}-05-29T15:45:00`);
+      }
+
+      const totalSeconds = Math.floor((targetDate - now) / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      document.getElementById('countdown').innerText =
+        `Countdown to May 29 at 3:45 PM: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+      let weekdayCount = 0;
+      let tempDate = new Date(now);
+      tempDate.setHours(0, 0, 0, 0);
+      const endDate = new Date(targetDate);
+      endDate.setHours(0, 0, 0, 0);
+
+      while (tempDate <= endDate) {
+        const day = tempDate.getDay();
+        if (day !== 0 && day !== 6) {
+          weekdayCount++;
+        }
+        tempDate.setDate(tempDate.getDate() + 1);
+      }
+
+      document.getElementById('weekdayCountdown').innerText =
+        `Weekdays remaining until May 29 at 3:45 PM: ${weekdayCount}`;
+    }
+
+    updateCountdowns();
+    setInterval(updateCountdowns, 1000);
+  </script>
+</body>
+</html>
